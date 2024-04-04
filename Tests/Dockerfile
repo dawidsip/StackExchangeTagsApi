@@ -1,24 +1,17 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 5184
+# Use the SDK image as the base image for building and testing
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-ENV ASPNETCORE_URLS=http://+:5184
-
-USER app
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG configuration=Release
+# Set the working directory
 WORKDIR /src
+
+# Copy the project file and restore dependencies
 COPY ["Tests/Tests.csproj", "Tests/"]
 RUN dotnet restore "Tests/Tests.csproj"
+
+# Copy the entire solution and build the tests
 COPY . .
 WORKDIR "/src/Tests"
-RUN dotnet build "Tests.csproj" -c $configuration -o /app/build
+RUN dotnet build "Tests.csproj" -c Release -o /app/build
 
-FROM build AS publish
-ARG configuration=Release
-RUN dotnet publish "Tests.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Tests.dll"]
+# Run the tests
+CMD ["dotnet", "test", "--logger:trx"]

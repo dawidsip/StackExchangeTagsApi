@@ -10,3 +10,9 @@ services:
       dockerfile: TodoApi/Dockerfile
     ports:
       - 5184:5184
+  # tests:
+  #   image: tests
+  #   build:
+  #     context: .
+  #     dockerfile: Tests/Dockerfile
+
