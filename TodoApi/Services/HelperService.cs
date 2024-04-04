@@ -9,6 +9,10 @@ public class HelperService
     private readonly ILogger<HelperService> _logger;
     private readonly IServiceProvider _serviceProvider;
 
+    public HelperService()
+    {
+    }
+    
     public HelperService(ILogger<HelperService> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
