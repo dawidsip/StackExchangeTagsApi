@@ -1,39 +1,38 @@
 using TodoApi.Models;
 using System.Net;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace TodoApi.Services;
 
 public class HelperService
 {
     private readonly ILogger<HelperService> _logger;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly TodoContext _dbContext;
 
     public HelperService()
     {
     }
     
-    public HelperService(ILogger<HelperService> logger, IServiceProvider serviceProvider)
+    public HelperService(ILogger<HelperService> logger, TodoContext dbContext)
     {
         _logger = logger;
-        _serviceProvider = serviceProvider;
+        _dbContext = dbContext;
     }
 
     public async void PopulateTags()
     {
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var dbContext = scope.ServiceProvider.GetRequiredService<TodoContext>();
-            dbContext.Tags.RemoveRange(dbContext.Tags);
-            dbContext.SaveChanges();
-            
-            var tagsToSave = await GetTagsAsync();
-            dbContext.Tags.AddRange(tagsToSave);                
-            var count = dbContext.SaveChanges();
+        _dbContext.Tags.RemoveRange(_dbContext.Tags);
+        _dbContext.SaveChanges();
+        
+        var tagsToSave = await GetTagsAsync();
+        _dbContext.Tags.AddRange(tagsToSave);                
+        var count = _dbContext.SaveChanges();
 
-            _logger.LogInformation("Tags in DataBase: {Count}", count);
-        }
+        _logger.LogInformation("Tags in DataBase: {Count}", count);
     }
+
+    public DbSet<Tag> GetTags() => _dbContext.Tags;
 
     private async Task<IEnumerable<Tag>> GetTagsAsync()
     {

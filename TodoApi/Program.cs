@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<TodoContext>(opt =>
-    opt.UseInMemoryDatabase("TagsList"));
+    opt.UseInMemoryDatabase("TagsList"), ServiceLifetime.Singleton);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -17,8 +17,8 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
+
 builder.Services.AddSingleton<HelperService>();
-builder.Services.AddScoped<TodoContext>();
 
 var app = builder.Build();
 

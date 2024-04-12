@@ -12,13 +12,11 @@ public class TagsController : ControllerBase
 {
     private readonly ILogger<TagsController> _logger;
     private readonly HelperService _helperService;
-    private readonly TodoContext _dbContext;
 
-    public TagsController(ILogger<TagsController> logger, HelperService helperService, TodoApi.Services.TodoContext dbContext)
+    public TagsController(ILogger<TagsController> logger, HelperService helperService)
     {
         _logger = logger;
         _helperService = helperService;
-        _dbContext = dbContext;    
     }
 
     /// <summary>
@@ -44,7 +42,7 @@ public class TagsController : ControllerBase
             return BadRequest("Invalid orderBy parameter. Valid values are 'name' or 'share'.");
         }
 
-        var tagsQuery = _dbContext.Tags.AsQueryable();
+        var tagsQuery = _helperService.GetTags().AsQueryable();
         var parameter = Expression.Parameter(typeof(Tag), "tag");
         var property = Expression.Property(parameter, propertyInfo);
         var selector = Expression.Lambda(property, parameter);
