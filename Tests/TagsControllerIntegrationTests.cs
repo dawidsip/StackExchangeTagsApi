@@ -16,7 +16,7 @@ namespace Tests
             var mockLogger = new Mock<ILogger<TagsController>>();
             var mockHelperService = new Mock<HelperService>();
             var mockDbContext = new Mock<TodoContext>();
-            _controller = new TagsController(mockLogger.Object, mockHelperService.Object, mockDbContext.Object);
+            _controller = new TagsController(mockLogger.Object, mockHelperService.Object);
         }
     }
 }

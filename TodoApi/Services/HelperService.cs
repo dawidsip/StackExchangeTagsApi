@@ -2,19 +2,16 @@ using TodoApi.Models;
 using System.Net;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using TodoApi.Interfaces;
 
 namespace TodoApi.Services;
 
 public class HelperService
 {
     private readonly ILogger<HelperService> _logger;
-    private readonly TodoContext _dbContext;
-
-    public HelperService()
-    {
-    }
+    private readonly ITodoContext _dbContext;
     
-    public HelperService(ILogger<HelperService> logger, TodoContext dbContext)
+    public HelperService(ILogger<HelperService> logger, ITodoContext dbContext)
     {
         _logger = logger;
         _dbContext = dbContext;
