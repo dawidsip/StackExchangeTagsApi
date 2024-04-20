@@ -2,7 +2,6 @@ using TodoApi.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TodoApi.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Tests
 {
